@@ -47,8 +47,6 @@ const AppSidebar = () => {
     });
   };
 
-  const workspaceName = projects[0]?.workspaceId ? "My Workspace" : "Taskify";
-
   return (
     <aside className="flex h-screen w-[280px] flex-col border-r border-gray-200 bg-white sticky top-0">
       {/* Workspace Header */}

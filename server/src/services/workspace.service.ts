@@ -16,8 +16,8 @@ export async function getWorkspaceById(id: string): Promise<Workspace | null> {
 
 export async function createWorkspace(data: Pick<Workspace, "name" | "imageUrl">): Promise<Workspace> {
   const doc = await WorkspaceModel.create(data);
-  const workspace: Workspace = doc.toObject() as WorkspaceDocument;
-  return { ...workspace, id: workspace._id!.toString() };
+  const workspace = doc.toObject();
+  return { ...workspace, id: (doc as any)._id.toString() } as Workspace;
 }
 
 export async function updateWorkspace(id: string, data: Partial<Workspace>): Promise<Workspace | null> {

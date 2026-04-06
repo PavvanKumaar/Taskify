@@ -4,7 +4,7 @@ import KanbanBoard from "../Components/KanbanBoard";
 import { useAppState } from "../Context/AppContext";
 import { useAuth } from "../Context/AuthContext";
 import { EditTaskDialog } from "../Components/EditTaskDialog";
-import { UITask } from "../Context/AppContext";
+import type { UITask } from "../Context/AppContext";
 
 const MyTasksPage = () => {
   const { user } = useAuth();

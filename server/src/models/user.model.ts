@@ -11,7 +11,7 @@ const UserSchema: Schema = new Schema<UserDocument>({
   avatarUrl: { type: String, default: '' },
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ['admin', 'member'], default: 'member' },
-  workspaceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Workspace', required: true },
+  workspaceId: { type: mongoose.Schema.Types.ObjectId as any, ref: 'Workspace', required: true },
 }, { timestamps: true });
 
 // Virtual id

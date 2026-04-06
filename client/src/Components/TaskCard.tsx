@@ -1,5 +1,5 @@
 import { Calendar } from "lucide-react";
-import { UITask } from "../Context/AppContext";
+import type { UITask } from "../Context/AppContext";
 
 interface TaskCardProps {
   task: UITask;

@@ -18,7 +18,7 @@ interface CreateTaskDialogProps {
   members?: string[];
 }
 
-const defaultTask = (projects: string[], members: string[]): TaskData => ({
+const defaultTask = (projects: string[]): TaskData => ({
   title: "",
   description: "",
   status: "Todo",
@@ -31,7 +31,7 @@ const defaultTask = (projects: string[], members: string[]): TaskData => ({
 export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   isOpen, onClose, onCreate, projects = [], members = [],
 }) => {
-  const [task, setTask] = useState<TaskData>(defaultTask(projects, members));
+  const [task, setTask] = useState<TaskData>(defaultTask(projects));
   const [isRendered, setIsRendered] = useState(isOpen);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -39,7 +39,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     let enterTimeout: number;
     let exitTimeout: number;
     if (isOpen) {
-      setTask(defaultTask(projects, members));
+      setTask(defaultTask(projects));
       setIsRendered(true);
       enterTimeout = window.setTimeout(() => setIsVisible(true), 10);
     } else {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import KanbanBoard from "./KanbanBoard";
 import { CheckCircle, Clock, ListTodo, AlertTriangle } from "lucide-react";
-import { useAppState, UITask } from "../Context/AppContext";
+import { useAppState, type UITask } from "../Context/AppContext";
 import { CreateTaskDialog } from "./CreateTaskDialog";
 import { EditTaskDialog } from "./EditTaskDialog";
 

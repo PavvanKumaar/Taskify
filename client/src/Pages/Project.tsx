@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import AppSidebar from "../Components/AppSideBar";
 import KanbanBoard from "../Components/KanbanBoard";
 import { AnalyticsCard } from "../Components/Home";
-import { useAppState, UITask } from "../Context/AppContext";
+import { useAppState, type UITask } from "../Context/AppContext";
 import { EditTaskDialog } from "../Components/EditTaskDialog";
 import { CreateTaskDialog } from "../Components/CreateTaskDialog";
 
