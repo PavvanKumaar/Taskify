@@ -1,6 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./Context/AuthContext";
 import { AppProvider } from "./Context/AppContext";
+import { ThemeProvider } from "./Context/ThemeContext";
+import { AnimatePresence, motion } from "framer-motion";
 import Index from "./Pages/Index";
 import MyTasksPage from "./Pages/MyTasksPage";
 import NotFound from "./Pages/NotFound";
@@ -13,8 +15,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-500 text-sm">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors">
+        <div className="text-gray-500 dark:text-gray-400 text-sm">Loading...</div>
       </div>
     );
   }
@@ -22,30 +24,49 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const PageWrapper = ({ children }: { children: React.ReactNode }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 15 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -15 }}
+    transition={{ duration: 0.4, ease: "easeOut" }}
+    className="h-full"
+  >
+    {children}
+  </motion.div>
+);
+
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
   return (
-    <Routes>
-      <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
-      <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-      <Route path="/my-tasks" element={<ProtectedRoute><MyTasksPage /></ProtectedRoute>} />
-      <Route path="/members" element={<ProtectedRoute><Members /></ProtectedRoute>} />
-      <Route path="/projects/:id" element={<ProtectedRoute><Project /></ProtectedRoute>} />
-      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <PageWrapper><Login /></PageWrapper>} />
+        <Route path="/" element={<ProtectedRoute><PageWrapper><Index /></PageWrapper></ProtectedRoute>} />
+        <Route path="/my-tasks" element={<ProtectedRoute><PageWrapper><MyTasksPage /></PageWrapper></ProtectedRoute>} />
+        <Route path="/members" element={<ProtectedRoute><PageWrapper><Members /></PageWrapper></ProtectedRoute>} />
+        <Route path="/projects/:id" element={<ProtectedRoute><PageWrapper><Project /></PageWrapper></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><PageWrapper><Settings /></PageWrapper></ProtectedRoute>} />
+        <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
   );
 };
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppProvider>
-          <AppRoutes />
-        </AppProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppProvider>
+            <div className="min-h-screen text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 transition-colors duration-300">
+              <AppRoutes />
+            </div>
+          </AppProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
