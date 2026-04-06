@@ -24,18 +24,18 @@ const Project = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex bg-gray-50 items-center justify-center">
-        <p className="text-gray-500 text-sm">Loading project...</p>
+      <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors items-center justify-center">
+        <p className="text-gray-500 dark:text-gray-400">Loading project...</p>
       </div>
     );
   }
 
   if (!project) {
     return (
-      <div className="min-h-screen flex bg-gray-50">
+      <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors">
         <AppSidebar />
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-gray-600">Project not found</p>
+          <p className="text-gray-600 dark:text-gray-400">Project not found</p>
         </div>
       </div>
     );
@@ -85,14 +85,14 @@ const Project = () => {
   });
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors">
       <AppSidebar />
       <main className="flex-1 overflow-auto p-6">
         <div className="mx-auto w-full max-w-7xl">
           <header className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900">{project.name}</h1>
-              <p className="text-sm text-gray-600">Kanban Board</p>
+              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors">{project.name}</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors">Kanban Board</p>
             </div>
             <button
               onClick={() => setCreateOpen(true)}

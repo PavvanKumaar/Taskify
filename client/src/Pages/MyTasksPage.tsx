@@ -50,30 +50,30 @@ const MyTasksPage = () => {
   });
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors">
       <AppSidebar />
       <main className="flex-1 overflow-auto p-6">
         <div className="mx-auto w-full max-w-7xl">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">My Tasks</h1>
-            <p className="mt-1 text-sm text-gray-600">Tasks assigned to you across all projects.</p>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors">My Tasks</h1>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 transition-colors">Tasks assigned to you across all projects.</p>
           </header>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 transition-colors">
             {isLoading ? (
-              <div className="text-center text-gray-500 text-sm py-8">Loading tasks...</div>
+              <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-8">Loading tasks...</div>
             ) : (
               <>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Showing tasks assigned to{" "}
                   <span className="font-semibold">{user?.name || "you"}</span>.
                   {myTasks.length === 0 && !currentMember && (
-                    <span className="ml-2 text-gray-400">(No matching member found — make sure your account email matches a workspace member)</span>
+                    <span className="ml-2 text-gray-400 dark:text-gray-500">(No matching member found — make sure your account email matches a workspace member)</span>
                   )}
                 </p>
                 <div className="mt-6">
                   {myTasks.length === 0 ? (
-                    <div className="text-center text-gray-400 text-sm py-12">No tasks assigned to you yet.</div>
+                    <div className="text-center text-gray-400 dark:text-gray-500 text-sm py-12">No tasks assigned to you yet.</div>
                   ) : (
                     <KanbanBoard
                       tasks={myTasks}

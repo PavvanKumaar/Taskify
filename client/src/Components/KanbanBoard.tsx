@@ -59,7 +59,7 @@ const KanbanBoard = ({ tasks, onMoveTask, onTaskClick }: KanbanBoardProps) => {
           const columnTasks = tasks.filter((t) => t.status === status);
           return (
             <Column key={status} status={status}>
-              <h3 className="mb-3 text-sm font-semibold uppercase text-gray-600">
+              <h3 className="mb-3 text-sm font-semibold uppercase text-gray-600 dark:text-gray-400 transition-colors">
                 {status} ({columnTasks.length})
               </h3>
               <SortableContext
@@ -83,7 +83,7 @@ const KanbanBoard = ({ tasks, onMoveTask, onTaskClick }: KanbanBoardProps) => {
 const Column = ({ status, children }: { status: Status; children: React.ReactNode }) => {
   const { setNodeRef } = useDroppable({ id: status });
   return (
-    <div ref={setNodeRef} className="flex flex-col rounded-xl bg-gray-50 p-3 min-h-[500px]">
+    <div ref={setNodeRef} className="flex flex-col rounded-xl bg-gray-50 dark:bg-gray-800/50 p-3 min-h-[500px] transition-colors">
       {children}
     </div>
   );
