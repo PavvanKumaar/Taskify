@@ -10,7 +10,7 @@ import workspaceRoutes from "./routes/workspace";
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000","https://taskify-5btr.onrender.com"],
+  origin: ["http://localhost:5173", "http://localhost:3000", "https://taskify-djmp.vercel.app", "https://taskify-5btr.onrender.com"],
   credentials: true,
 }));
 app.use(express.json());
