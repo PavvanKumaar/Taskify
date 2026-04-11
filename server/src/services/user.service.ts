@@ -4,14 +4,14 @@ import { User } from '../types';
 
 export async function getAllUsers(): Promise<User[]> {
   const docs = await UserModel.find({}, '-passwordHash').lean().exec();
-  return docs.map(doc => ({ ...doc, id: (doc as any)._id.toString() })) as User[];
+  return docs.map(doc => ({ ...doc, id: (doc as any)._id.toString() })) as unknown as User[];
 }
 
 export async function getUserById(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
   const doc = await UserModel.findById(id, '-passwordHash').lean().exec();
   if (!doc) return null;
-  return { ...doc, id: (doc as any)._id.toString() } as User;
+  return { ...doc, id: (doc as any)._id.toString() } as unknown as User;
 }
 
 export async function updateUser(id: string, update: Partial<User>) {
@@ -20,7 +20,7 @@ export async function updateUser(id: string, update: Partial<User>) {
     id, update, { returnDocument: 'after', runValidators: true }
   ).select('-passwordHash').lean().exec();
   if (!doc) return null;
-  return { ...doc, id: (doc as any)._id.toString() } as User;
+  return { ...doc, id: (doc as any)._id.toString() } as unknown as User;
 }
 
 export async function deleteUser(id: string) {
