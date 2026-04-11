@@ -1,7 +1,13 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { Project } from '../types';
 
-export interface ProjectDocument extends Project, Document {}
+export interface ProjectDocument extends Document {
+  name: string;
+  workspaceId: mongoose.Types.ObjectId;
+  imageUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const ProjectSchema: Schema = new Schema<ProjectDocument>({
   name: { type: String, required: true, trim: true },
