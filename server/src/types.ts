@@ -50,3 +50,7 @@ export interface JwtPayload {
   userId: string;
   role: "admin" | "member";
 }
+
+export interface ProjectMember extends Member {
+  projectRole: 'admin' | 'member';
+}

@@ -1,6 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-const BASE_URL = `${API_URL}/api`;
-console.log("API URL:", import.meta.env.VITE_API_URL);
+const BASE_URL = "/api";
+
 function getToken(): string | null {
   return localStorage.getItem("token");
 }
