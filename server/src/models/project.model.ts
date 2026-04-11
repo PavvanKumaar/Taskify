@@ -5,7 +5,7 @@ export interface ProjectDocument extends Project, Document {}
 
 const ProjectSchema: Schema = new Schema<ProjectDocument>({
   name: { type: String, required: true, trim: true },
-  workspaceId: { type: mongoose.Schema.Types.ObjectId as any, ref: 'Workspace', required: true },
+  workspaceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Workspace', required: true },
   imageUrl: { type: String, default: '' },
 }, { timestamps: true });
 

@@ -1,16 +1,16 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
+import { verifyToken } from '../services/auth.service';
 
 export interface AuthSocket extends Socket {
   userId?: string;
 }
 
 export function setupSockets(io: SocketIOServer) {
-  io.use(async (socket: AuthSocket, next) => {
+  io.use((socket: AuthSocket, next) => {
     const token = socket.handshake.auth.token;
     if (!token) return next(new Error('Authentication error'));
-    // Verify JWT (reuse auth logic)
     try {
-      const payload = require('../services/auth.service').verifyToken(token);
+      const payload = verifyToken(token);
       socket.userId = payload.userId;
       next();
     } catch {
@@ -19,12 +19,9 @@ export function setupSockets(io: SocketIOServer) {
   });
 
   io.on('connection', (socket: AuthSocket) => {
-    console.log(`User ${socket.userId} connected`);
-
-    // Task events (emit already in controllers)
+    console.log(`Socket: user ${socket.userId} connected`);
     socket.on('disconnect', () => {
-      console.log(`User ${socket.userId} disconnected`);
+      console.log(`Socket: user ${socket.userId} disconnected`);
     });
   });
 }
-

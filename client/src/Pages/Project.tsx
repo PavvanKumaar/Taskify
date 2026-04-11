@@ -1,30 +1,42 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import AppSidebar from "../Components/AppSideBar";
-import KanbanBoard from "../Components/KanbanBoard";
-import { AnalyticsCard } from "../Components/Home";
-import { useAppState, type UITask } from "../Context/AppContext";
-import { EditTaskDialog } from "../Components/EditTaskDialog";
-import { CreateTaskDialog } from "../Components/CreateTaskDialog";
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Users } from 'lucide-react';
+import AppSidebar from '../Components/AppSideBar';
+import KanbanBoard from '../Components/KanbanBoard';
+import { AnalyticsCard } from '../Components/Home';
+import { useAppState, type UITask } from '../Context/AppContext';
+import { EditTaskDialog } from '../Components/EditTaskDialog';
+import { CreateTaskDialog } from '../Components/CreateTaskDialog';
 
 const Project = () => {
   const { id } = useParams<{ id: string }>();
-  const { projects, members, tasks: allTasks, updateTask, deleteTask, moveTask, addTask, isLoading } = useAppState();
+  const navigate = useNavigate();
+  const {
+    projects, tasks: allTasks,
+    projectMembers, fetchProjectMembers,
+    updateTask, deleteTask, moveTask, addTask, isLoading,
+  } = useAppState();
+
   const [projectTasks, setProjectTasks] = useState<UITask[]>([]);
   const [editTask, setEditTask] = useState<UITask | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
 
   const project = projects.find((p) => p.id === id);
+  const members = (id && projectMembers[id]) || [];
+
+  // Fetch project members when project loads
+  useEffect(() => {
+    if (id) fetchProjectMembers(id);
+  }, [id, fetchProjectMembers]);
 
   // Filter tasks by project
   useEffect(() => {
-    const filtered = allTasks.filter((t) => t.projectId === id);
-    setProjectTasks(filtered);
+    setProjectTasks(allTasks.filter((t) => t.projectId === id));
   }, [allTasks, id]);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors items-center justify-center">
+      <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 items-center justify-center">
         <p className="text-gray-500 dark:text-gray-400">Loading project...</p>
       </div>
     );
@@ -32,7 +44,7 @@ const Project = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900">
         <AppSidebar />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-gray-600 dark:text-gray-400">Project not found</p>
@@ -80,9 +92,11 @@ const Project = () => {
     status: task.status,
     priority: task.priority,
     project: project.name,
-    assignee: task.assignee?.name || "Unassigned",
-    dueDate: task.dueDate || "",
+    assignee: task.assignee?.name || 'Unassigned',
+    dueDate: task.dueDate || '',
   });
+
+  const memberNames = members.map((m) => m.name);
 
   return (
     <div className="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -91,15 +105,25 @@ const Project = () => {
         <div className="mx-auto w-full max-w-7xl">
           <header className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors">{project.name}</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors">Kanban Board</p>
+              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{project.name}</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Kanban Board</p>
             </div>
-            <button
-              onClick={() => setCreateOpen(true)}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
-            >
-              + New Task
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Members shortcut */}
+              <button
+                onClick={() => navigate(`/members?project=${project.id}`)}
+                className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <Users className="h-4 w-4" />
+                <span>{members.length} {members.length === 1 ? 'member' : 'members'}</span>
+              </button>
+              <button
+                onClick={() => setCreateOpen(true)}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+              >
+                + New Task
+              </button>
+            </div>
           </header>
 
           <AnalyticsCard tasks={projectTasks} />
@@ -116,7 +140,7 @@ const Project = () => {
         onClose={() => setCreateOpen(false)}
         onCreate={handleCreate}
         projects={[project.name]}
-        members={members.map((m) => m.name)}
+        members={memberNames}
       />
 
       <EditTaskDialog
@@ -126,7 +150,7 @@ const Project = () => {
         onDelete={handleDelete}
         task={editTask ? taskToDialogData(editTask) : null}
         projects={[project.name]}
-        members={members.map((m) => m.name)}
+        members={memberNames}
       />
     </div>
   );

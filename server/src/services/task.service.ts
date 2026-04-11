@@ -30,7 +30,9 @@ export async function createTask(data: Omit<Task, 'id' | 'createdAt' | 'updatedA
 
 export async function updateTask(id: string, data: Partial<Task>): Promise<Task | null> {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
-  const doc = await TaskModel.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean().exec();
+  const doc = await TaskModel.findByIdAndUpdate(
+    id, data, { returnDocument: 'after', runValidators: true }
+  ).lean().exec();
   if (!doc) return null;
   return { ...doc, id: (doc as any)._id.toString() } as unknown as Task;
 }

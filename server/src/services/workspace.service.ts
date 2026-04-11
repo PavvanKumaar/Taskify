@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { WorkspaceModel, WorkspaceDocument } from '../models/workspace.model';
+import { WorkspaceModel } from '../models/workspace.model';
 import { Workspace } from '../types';
 
 export async function getAllWorkspaces(): Promise<Workspace[]> {
@@ -14,15 +14,16 @@ export async function getWorkspaceById(id: string): Promise<Workspace | null> {
   return { ...doc, id: (doc as any)._id.toString() } as Workspace;
 }
 
-export async function createWorkspace(data: Pick<Workspace, "name" | "imageUrl">): Promise<Workspace> {
+export async function createWorkspace(data: Pick<Workspace, 'name' | 'imageUrl'>): Promise<Workspace> {
   const doc = await WorkspaceModel.create(data);
-  const workspace = doc.toObject();
-  return { ...workspace, id: (doc as any)._id.toString() } as Workspace;
+  return { ...doc.toObject(), id: doc._id.toString() } as Workspace;
 }
 
 export async function updateWorkspace(id: string, data: Partial<Workspace>): Promise<Workspace | null> {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
-  const doc = await WorkspaceModel.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean().exec();
+  const doc = await WorkspaceModel.findByIdAndUpdate(
+    id, data, { returnDocument: 'after', runValidators: true }
+  ).lean().exec();
   if (!doc) return null;
   return { ...doc, id: (doc as any)._id.toString() } as Workspace;
 }
